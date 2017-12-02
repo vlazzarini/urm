@@ -45,10 +45,6 @@ greater or equal to the number of instructions in the program.
 The program prints its result (the contents of the first register)
 on exit.
 
-Testing
--------------
-
-In need.
 
 Example
 -------------
@@ -68,6 +64,10 @@ The only modification is the addition of register setting lines.
 $ ./urm test.prg 
 4
 
+Testing
+-------------
+
+In need.
 
 
 
