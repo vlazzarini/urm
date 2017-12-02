@@ -10,7 +10,7 @@ The URM has the following instruction format:
 
 OPCODE OP1 [OP2 [OP3]]
 
-where the OPCODE is either 1, 2, 3, or 4, and OP1-3 are
+where OPCODE is either 1, 2, 3, or 4, and OP1-3 are
 the operands.
 
 Each instruction is terminated by a newline.
