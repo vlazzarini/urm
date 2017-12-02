@@ -1,3 +1,9 @@
+/******************************************************************************
+ * Unlimited register machine interpreter
+ * 
+ * Victor Lazzarini, 2017
+ *
+ ******************************************************************************/
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
