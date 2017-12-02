@@ -24,7 +24,7 @@ typedef struct code_line { unsigned long instruction[4]; } CODELINE;
    unlimited register 
 */
 typedef struct _register_ {
-  int *data;
+  unsigned long *data;
   size_t size;
 } REGISTER;
 
@@ -49,7 +49,6 @@ unsigned int execute_instruction(unsigned int cnt, CODELINE pgm,
                                  REGISTER *reg) {
   unsigned int opc = pgm.instruction[0], op1 = pgm.instruction[1] - 1,
                op2 = pgm.instruction[2] - 1, op3 = pgm.instruction[3] - 1;
-
   switch (opc) {
   case Z:
     if (op1 > reg->size) expand_register(reg);
@@ -70,12 +69,13 @@ unsigned int execute_instruction(unsigned int cnt, CODELINE pgm,
   case J:
     if (op1 > reg->size || op2 > reg->size)
          expand_register(reg);
-    if (reg->data[op1] == reg->data[op2])
-      cnt = reg->data[op3];
+    if (reg->data[op1] == reg->data[op2]) {
+      cnt = op3;
+    }
     else
       cnt++;
     break;
-  DEFAULT:
+  default:
     cnt++;
     fprintf(stderr, "illegal instruction\n");
   }
@@ -90,8 +90,9 @@ CODELINE read_instruction(char *code) {
   char *nxt;
   CODELINE pgm = { .instruction = {0L, 0L, 0L, 0L} };
   unsigned int opc = strtoul(code, &nxt, 0);
+  
   switch (opc) {
-  case Z:
+  case Z: 
     pgm.instruction[1] = strtoul(nxt, 0, 0);
     break;
   case S:
@@ -106,53 +107,55 @@ CODELINE read_instruction(char *code) {
     pgm.instruction[2] = strtoul(nxt, &nxt, 0);
     pgm.instruction[3] = strtoul(nxt, 0, 0);
     break;
-  DEFAULT:
+  default:
     fprintf(stderr, "illegal instruction\n");
   }
+  pgm.instruction[0] = opc;
   return pgm;
 }
 
 /** 
    Initialise the URM
 */
-void init_urm(CODELINE **pgm, REGISTER **reg) {
+void init_urm(CODELINE **pgm, REGISTER *reg) {
    *pgm = (CODELINE *)calloc(sizeof(CODELINE), INIT_SIZE);
-   *reg = (REGISTER *)calloc(sizeof(REGISTER), INIT_SIZE);
+   reg->data = (unsigned long *)calloc(sizeof(unsigned long), INIT_SIZE);
 }
 
 /** 
   Free the URM memory
 */
-void free_urm(CODELINE *pgm, REGISTER *reg) {
+void free_urm(CODELINE *pgm, REGISTER reg) {
   free(pgm);
-  free(reg);
+  free(reg.data);
 }
 
 int main(int argc, const char **argv) {
 
   FILE *fp = stdin;
   char *line = NULL;
-  size_t cap = 0, pgm_size = 0, max_pgm_size = INIT_SIZE, pgm_cnt;
+  size_t cap = 0, pgm_size = 0, max_pgm_size = INIT_SIZE, pgm_cnt = 0;
   CODELINE *pgm;
-  REGISTER *reg;
+  REGISTER reg;
 
   if (argc > 1)
     fp = fopen(argv[1], "r");
 
   init_urm(&pgm, &reg);
   
-  if (getline(&line, &cap, fp) > 0) {
+  while (getline(&line, &cap, fp) > 0) {
     if (pgm_size > max_pgm_size) {
       max_pgm_size += INIT_SIZE;
       pgm = (CODELINE *)realloc(pgm, max_pgm_size * sizeof(CODELINE));
     }
+
     pgm[pgm_size++] = read_instruction(line);
   }
 
-  while (pgm_cnt < pgm_size)
-    pgm_cnt = execute_instruction(pgm_cnt, pgm[pgm_cnt], reg);
-
-  printf("%d", reg->data[0]);
+  while (pgm_cnt < pgm_size) 
+    pgm_cnt = execute_instruction(pgm_cnt, pgm[pgm_cnt], &reg);
+  
+  printf("%lu\n", reg.data[0]);
   free_urm(pgm, reg);
   free(line);
   return 0;
