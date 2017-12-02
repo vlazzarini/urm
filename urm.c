@@ -33,12 +33,11 @@ typedef struct _register_ {
   Allocate extra space for the register, reset the new locations
   to zero.
 */
-REGISTER *expand_register(REGISTER *reg) {
+void expand_register(REGISTER *reg) {
   size_t end = reg->size;
   reg->size += INIT_SIZE;
   reg->data = realloc(reg->data, reg->size * sizeof(int));
   memset(reg->data + end, 0, sizeof(int) * (reg->size - end));
-  return reg;
 }
 
 /**
@@ -47,33 +46,30 @@ REGISTER *expand_register(REGISTER *reg) {
  register *p
 */
 unsigned int execute_instruction(unsigned int cnt, CODELINE pgm,
-                                 REGISTER **p) {
+                                 REGISTER *reg) {
   unsigned int opc = pgm.instruction[0], op1 = pgm.instruction[1],
                op2 = pgm.instruction[2], op3 = pgm.instruction[3];
 
-  REGISTER *reg = *p;
   switch (opc) {
   case Z:
-    if (op1 > reg->size)
-      *p = reg = expand_register(reg);
+    if (op1 > reg->size) expand_register(reg);
     reg->data[op1] = 0;
     cnt++;
     break;
   case S:
-    if (op1 > reg->size)
-      *p = reg = expand_register(reg);
+    if (op1 > reg->size) expand_register(reg);
     reg->data[op1]++;
     cnt++;
     break;
   case T:
     if (op1 > reg->size || op2 > reg->size)
-      *p = reg = expand_register(reg);
+        expand_register(reg);
     reg->data[op1] = reg->data[op2];
     cnt++;
     break;
   case J:
     if (op1 > reg->size || op2 > reg->size)
-      *p = reg = expand_register(reg);
+         expand_register(reg);
     if (reg->data[op1] == reg->data[op2])
       cnt = reg->data[op3];
     else
@@ -156,7 +152,7 @@ int main(int argc, const char **argv) {
   }
 
   while (pgm_cnt < pgm_size)
-    pgm_cnt = execute_instruction(pgm_cnt, pgm[pgm_cnt], &reg);
+    pgm_cnt = execute_instruction(pgm_cnt, pgm[pgm_cnt], reg);
 
   printf("%d", reg->data[0]);
 
