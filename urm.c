@@ -1,7 +1,9 @@
 /******************************************************************************
- * Unlimited register machine interpreter
+ * Unlimited register machine interpreter, as per Cutland, "Computability"
  * 
- * Victor Lazzarini, 2017
+ * (c) Victor Lazzarini, 2017
+ *
+ * BSD license, see LICENSE
  *
  ******************************************************************************/
 #include <stddef.h>
