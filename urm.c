@@ -64,7 +64,7 @@ unsigned int execute_instruction(unsigned int cnt, CODELINE pgm,
   case T:
     if (op1 > reg->size || op2 > reg->size)
       expand_register(reg);
-    reg->data[op1] = reg->data[op2];
+    reg->data[op2] = reg->data[op1];
     cnt++;
     break;
   case J:

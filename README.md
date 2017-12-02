@@ -24,8 +24,8 @@ program count.
 * S (OPCODE = 2): increment the register indicated by OP1, increment
 program count.
 
-* T (OPCODE = 3): transfer the value in register OP2 to
-register OP1, increment program count.
+* T (OPCODE = 3): transfer the value in register OP1 to
+register OP2, increment program count.
 
 * J (OPCODE = 4): if the value in register OP1 equals the
 value in register OP2, set program count to the value in
