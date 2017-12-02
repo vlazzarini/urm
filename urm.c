@@ -47,8 +47,8 @@ void expand_register(REGISTER *reg) {
 */
 unsigned int execute_instruction(unsigned int cnt, CODELINE pgm,
                                  REGISTER *reg) {
-  unsigned int opc = pgm.instruction[0], op1 = pgm.instruction[1],
-               op2 = pgm.instruction[2], op3 = pgm.instruction[3];
+  unsigned int opc = pgm.instruction[0], op1 = pgm.instruction[1] - 1,
+               op2 = pgm.instruction[2] - 1, op3 = pgm.instruction[3] - 1;
 
   switch (opc) {
   case Z:
@@ -118,7 +118,6 @@ CODELINE read_instruction(char *code) {
 void init_urm(CODELINE **pgm, REGISTER **reg) {
    *pgm = (CODELINE *)calloc(sizeof(CODELINE), INIT_SIZE);
    *reg = (REGISTER *)calloc(sizeof(REGISTER), INIT_SIZE);
-
 }
 
 /** 
