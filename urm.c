@@ -131,9 +131,8 @@ void free_urm(CODELINE *pgm, REGISTER *reg) {
 int main(int argc, const char **argv) {
 
   FILE *fp = stdin;
-  char *line = (char *) calloc(sizeof(char), INIT_SIZE);
-  size_t cap = INIT_SIZE,pgm_size = 0, max_pgm_size =
-    INIT_SIZE, pgm_cnt;
+  char *line = NULL;
+  size_t cap = 0, pgm_size = 0, max_pgm_size = INIT_SIZE, pgm_cnt;
   CODELINE *pgm;
   REGISTER *reg;
 
@@ -154,7 +153,7 @@ int main(int argc, const char **argv) {
     pgm_cnt = execute_instruction(pgm_cnt, pgm[pgm_cnt], reg);
 
   printf("%d", reg->data[0]);
-
   free_urm(pgm, reg);
+  free(line);
   return 0;
 }
