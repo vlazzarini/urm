@@ -1,4 +1,4 @@
-This program calculates 2 + 2
+This program calculates 2 + 2, from Cutland p.18
 2 1             1: set register 1 to 1
 2 1             2: set register 1 to 2
 2 2             3: set register 2 to 1
